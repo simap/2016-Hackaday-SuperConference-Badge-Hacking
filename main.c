@@ -37,8 +37,11 @@ void interrupt high_priority interrupt_at_high_vector(void)
     }
     /***** End User Code for high priority interrupts *****/
     
-    //this ASM call must end the function (needed for kernel compliance)
-    asm("goto 0x2B08");
+    //only call the original kernel for the interrupts it knows how to handle (otherwise it assumes TMR0IF was triggered)
+    if (TMR0IF || INT0IF) {
+        //this ASM call must end the function (needed for kernel compliance)
+        asm("goto 0x2B08");
+    }
 }
 
 // LOW VECTOR
